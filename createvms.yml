@@ -72,7 +72,7 @@
         msg: "{{vpc_subnet_id}}"
 
     - name: Creating {{count}} AWS VMs in {{region}}
-      ec2:
+      ec2.instance:
        key_name: "{{key_name}}"
        instance_type: "{{instance_type}}"
        image:  "{{image}}"
@@ -88,7 +88,7 @@
          VPC: "{{vpc_name}}"
          Name: "{{server_pre_name}}"
          ansible_group: "{{ec2_ansible_group}}"
-         Createdby: Ansible Tower
+         Createdby: Ansible Controller
          Contact: "{{my_email_address}}"
          DeletebBy: "{{deleteby}}"
          Type: "{{group}}"
