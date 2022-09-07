@@ -47,6 +47,18 @@
       fail: msg='Please include the deleteby to the variable "deleteby"'
       run_once: true
       when: 'deleteby is not defined'
+   # Gather the start time to use in a later playbook
+    - name: Record the vpc start time
+      ansible.builtin.command:
+        cmd: "date '+%H:%M:%S'"
+      delegate_to: 127.0.0.1
+      register: vpc_create_time_pre
+
+# Make the start time available to other playbooks
+   - name: Capture the create vpc_create_time
+     ansible.builtin.set_stats:
+        data:
+          vpc_create_time: "{{ vpc_create_time_pre.stdout }}"
 
 
 
