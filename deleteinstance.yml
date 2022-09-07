@@ -25,7 +25,7 @@
          msg: "{{instance_info.instances[0].instance_id}}"
 
     - name: Setting ec2 {{servername}} to {{state}}
-      amazon.aws.ec2:
+      amazon.aws.ec2_instance:
         region: "{{region}}"
         state: absent
         instance_ids: "{{instance_info.instances[0].instance_id}}"
