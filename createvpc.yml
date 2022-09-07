@@ -53,12 +53,14 @@
         cmd: "date '+%H:%M:%S'"
       delegate_to: 127.0.0.1
       register: vpc_create_time_pre
+      run_once: true
 
 # Make the start time available to other playbooks
     - name: Capture the create vpc_create_time
       ansible.builtin.set_stats:
          data:
            vpc_create_time: "{{ vpc_create_time_pre.stdout }}"
+      run_once: true
 
 
 

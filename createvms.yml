@@ -56,13 +56,13 @@
         cmd: "date '+%H:%M:%S'"
       delegate_to: 127.0.0.1
       register: machine_create_time_pre
-
+      run_once: true
     # Make the start time available to other playbooks
     - name: Capture machine instance start time
       ansible.builtin.set_stats:
         data:
           machine_create_time: "{{ machine_create_time_pre.stdout }}"
-
+      run_once: true
 
     - name: If vpc_subnet_id doesn't exist lookup by {{subnet_name}}
       block:
