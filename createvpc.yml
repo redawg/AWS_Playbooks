@@ -55,10 +55,10 @@
       register: vpc_create_time_pre
 
 # Make the start time available to other playbooks
-   - name: Capture the create vpc_create_time
-     ansible.builtin.set_stats:
-        data:
-          vpc_create_time: "{{ vpc_create_time_pre.stdout }}"
+    - name: Capture the create vpc_create_time
+      ansible.builtin.set_stats:
+         data:
+           vpc_create_time: "{{ vpc_create_time_pre.stdout }}"
 
 
 
