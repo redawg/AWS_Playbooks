@@ -17,10 +17,10 @@
             instance-state-name: [ "running"]
         register: webserverinfo
       # added for html Demo
-      - name: Capture webserver info to print to Jinja/html template 
+      - name: Capture webserver info to print to Jinja html template
         ansible.builtin.set_stats:
-        data:
-          webserverinfo: "{{ webserverinfo.instances[0].public_ip_address }}"
+           data:
+             webserverinfo: "{{ webserverinfo.instances[0].public_ip_address }}"
         run_once: true
 
       - name: debug webserverinfo
