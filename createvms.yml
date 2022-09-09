@@ -81,20 +81,21 @@
     - name: Show Subnet_id
       debug:
         msg: "{{vpc_subnet_id}}"
-
+# this is updated to newest module params as of 9/8/22
     - name: Creating {{count}} AWS VMs in {{region}}
       amazon.aws.ec2_instance:
        key_name: "{{key_name}}"
        instance_type: "{{instance_type}}"
        image_id:  "{{image}}"
        wait: "{{wait}}"
-       group: "{{ec2_security_group_name}}"
+       security_group: "{{ec2_security_group_name}}"
        wait_timeout: 500
        count: "{{count}}"
        region: "{{region}}"
        vpc_subnet_id:  "{{vpc_subnet_id}}"
-       assign_public_ip: "{{assign_public_ip}}"
-       instance_tags:
+       network:
+         assign_public_ip: "{{assign_public_ip}}"
+       tags:
          AlwaysUp: "{{alwaysup}}"
          VPC: "{{vpc_name}}"
          Name: "{{server_pre_name}}"
