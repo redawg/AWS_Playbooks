@@ -86,7 +86,7 @@
       amazon.aws.ec2_instance:
        key_name: "{{key_name}}"
        instance_type: "{{instance_type}}"
-       image:  "{{image}}"
+       image_id:  "{{image}}"
        wait: "{{wait}}"
        group: "{{ec2_security_group_name}}"
        wait_timeout: 500
