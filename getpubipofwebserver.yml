@@ -16,6 +16,13 @@
             "tag:VPC": "Demowebapp"
             instance-state-name: [ "running"]
         register: webserverinfo
+      # added for html Demo
+      - name: Capture the subscription_time
+        ansible.builtin.set_stats:
+        data:
+          webserverinfo: "{{ webserverinfo.instances[0].public_ip_address }}"
+        run_once: true 
+
       - name: debug webserverinfo
         debug:
           msg: "{{ webserverinfo.instances[0].public_ip_address }}"
