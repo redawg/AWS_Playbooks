@@ -94,7 +94,7 @@
        region: "{{region}}"
        vpc_subnet_id:  "{{vpc_subnet_id}}"
        network:
-         assign_public_ip: "{{assign_public_ip}}"
+         assign_public_ip: true
        tags:
          AlwaysUp: "{{alwaysup}}"
          VPC: "{{vpc_name}}"
