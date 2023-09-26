@@ -15,3 +15,6 @@
           region: "{{ aws_region }}"
           force: True
           state: present
+      - name: debug
+        ansible.builtin.debug:
+          var: aws_secret_key
