@@ -13,8 +13,8 @@
           region: us-west-2
           filters:
             "tag:Name": "webserver-tf"
-            "tag:VPC": "i-love-schawb-andrew-vpc-tf"
-            instance-state-name: [ "running"]
+            "tag:CreatedBy": "TerraformViaAnsible"
+            instance-state-name: [ "running" ]
         register: webserverinfo
       # added for html Demo
       - name: Capture webserver info to print to Jinja html template
