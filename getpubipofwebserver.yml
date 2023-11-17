@@ -1,37 +1,37 @@
 ---
-  - name: Get info on running webserver for demo (AWS)
-    hosts: localhost
-    connection: local
-    gather_facts: no
-    vars:
-       aws_access_key: ''
-       aws_secret_key: ''
+- name: Get info on running webserver for demo (AWS)
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars:
+    aws_access_key: ""
+    aws_secret_key: ""
 
-    tasks:
-      - name: Get public IP address of webserver instance
-        amazon.aws.ec2_instance_info:
-          region: us-west-2
-          filters:
-            "tag:Name": "webserver"
-            "tag:VPC": "Demowebapp"
-            instance-state-name: [ "running"]
-        register: webserverinfo
+  tasks:
+    - name: Get public IP address of webserver instance
+      amazon.aws.ec2_instance_info:
+        region: us-west-2
+        filters:
+          tag:Name: webserver
+          tag:VPC: Demowebapp
+          instance-state-name: [running]
+      register: webserverinfo
       # added for html Demo
-      - name: Capture webserver info to print to Jinja html template
-        ansible.builtin.set_stats:
-           data:
-             webserverinfo: "{{ webserverinfo.instances[0].public_ip_address }}"
-        run_once: true
+    - name: Capture webserver info to print to Jinja html template
+      ansible.builtin.set_stats:
+        data:
+          webserverinfo: "{{ webserverinfo.instances[0].public_ip_address }}"
+      run_once: true
 
-      - name: debug webserverinfo
-        debug:
-          msg: "{{ webserverinfo.instances[0].public_ip_address }}"
-          verbosity: 2
-      - name: Send Alert to Slack
-        slack:
-          token: "{{ slack_token }}"
-          msg: "The public IP of the Webserver is http://{{ webserverinfo.instances[0].public_ip_address }}."
-          channel: "{{ channel }}"
-          username: "{{ slackuser }}"
-        run_once: true
-        delegate_to: localhost
+    - name: debug webserverinfo
+      debug:
+        msg: "{{ webserverinfo.instances[0].public_ip_address }}"
+        verbosity: 2
+    - name: Send Alert to Slack
+      slack:
+        token: "{{ slack_token }}"
+        msg: The public IP of the Webserver is http://{{ webserverinfo.instances[0].public_ip_address }}.
+        channel: "{{ channel }}"
+        username: "{{ slackuser }}"
+      run_once: true
+      delegate_to: localhost
