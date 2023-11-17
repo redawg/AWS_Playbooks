@@ -1,59 +1,58 @@
 ---
-  - name: Get instances info
-    hosts: localhost
-    connection: local
-    gather_facts: no
-    vars:
-       ec2_security_group_name: "{{vpc_name}}_SECGRP"
-       ec2_ansible_group: "{{user_name}}"
-       my_email_address: "{{user_name}}@redhat.com"
+- name: Get instances info
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars:
+    ec2_security_group_name: "{{vpc_name}}_SECGRP"
+    ec2_ansible_group: "{{user_name}}"
+    my_email_address: "{{user_name}}@redhat.com"
 
-
-    tasks:
-    - name: 'Preflight Varible check :: subnet_name'
+  tasks:
+    - name: "Preflight Varible check :: subnet_name"
       fail: msg='Please include the subnet_name to the variable "subnet_name"'
       run_once: true
-      when: 'subnet_name is not defined'
-    - name: 'Preflight Varible check :: key_name'
+      when: subnet_name is not defined
+    - name: "Preflight Varible check :: key_name"
       fail: msg='Please include the key_name to the variable "key_name"'
       run_once: true
-      when: 'key_name is not defined'
-    - name: 'Preflight Varible check :: image'
+      when: key_name is not defined
+    - name: "Preflight Varible check :: image"
       fail: msg='Please include the image to the variable "image"'
       run_once: true
-      when: 'image is not defined'
-    - name: 'Preflight Varible check :: count'
+      when: image is not defined
+    - name: "Preflight Varible check :: count"
       fail: msg='Please include the count to the variable "count"'
       run_once: true
-      when: 'count is not defined'
-    - name: 'Preflight Varible check :: region'
+      when: count is not defined
+    - name: "Preflight Varible check :: region"
       fail: msg='Please include the region to the variable "region"'
       run_once: true
-      when: 'region is not defined'
-    - name: 'Preflight Varible check :: assign_public_ip'
+      when: region is not defined
+    - name: "Preflight Varible check :: assign_public_ip"
       fail: msg='Please include the assign_public_ip to the variable "assign_public_ip"'
       run_once: true
-      when: 'assign_public_ip is not defined'
-    - name: 'Preflight Varible check :: alwaysup'
+      when: assign_public_ip is not defined
+    - name: "Preflight Varible check :: alwaysup"
       fail: msg='Please include the alwaysup to the variable "alwaysup"'
       run_once: true
-      when: 'alwaysup is not defined'
-    - name: 'Preflight Varible check :: server_pre_name'
+      when: alwaysup is not defined
+    - name: "Preflight Varible check :: server_pre_name"
       fail: msg='Please include the server_pre_name to the variable "server_pre_name"'
       run_once: true
-      when: 'server_pre_name is not defined'
-    - name: 'Preflight Varible check :: deleteby'
+      when: server_pre_name is not defined
+    - name: "Preflight Varible check :: deleteby"
       fail: msg='Please include the deleteby to the variable "deleteby"'
       run_once: true
-      when: 'deleteby is not defined'
-    - name: 'Preflight Varible check :: group'
+      when: deleteby is not defined
+    - name: "Preflight Varible check :: group"
       fail: msg='Please include the group to the variable "group"'
       run_once: true
-      when: 'group is not defined'
+      when: group is not defined
     # Gather the start time to use in a later playbook
     - name: Record the machine_create_time
       ansible.builtin.command:
-        cmd: "date '+%H:%M:%S'"
+        cmd: date '+%H:%M:%S'
       delegate_to: 127.0.0.1
       register: machine_create_time_pre
       run_once: true
@@ -66,41 +65,41 @@
 
     - name: If vpc_subnet_id doesn't exist lookup by {{subnet_name}}
       block:
-      - name: Looking Up Subnet_id for {{subnet_name}} if vpc_subnet_id doesn't exist
-        ec2_vpc_subnet_info:
-          region: "{{region}}"
-          filters:
-            "tag:Name": "{{subnet_name}}"
-        register: subnet_id
+        - name: Looking Up Subnet_id for {{subnet_name}} if vpc_subnet_id doesn't exist
+          ec2_vpc_subnet_info:
+            region: "{{region}}"
+            filters:
+              tag:Name: "{{subnet_name}}"
+          register: subnet_id
 
-      - name: Setting vpc_subnet_id based on Lookup of {{subnet_name}}
-        set_fact:
-          vpc_subnet_id: "{{subnet_id.subnets[0].id}}"
+        - name: Setting vpc_subnet_id based on Lookup of {{subnet_name}}
+          set_fact:
+            vpc_subnet_id: "{{subnet_id.subnets[0].id}}"
       when: vpc_subnet_id is undefined
 
     - name: Show Subnet_id
       debug:
         msg: "{{vpc_subnet_id}}"
-# this is updated to newest module params as of 9/8/22
+    # this is updated to newest module params as of 9/8/22
     - name: Creating {{count}} AWS VMs in {{region}}
       amazon.aws.ec2_instance:
-       key_name: "{{key_name}}"
-       instance_type: "{{instance_type}}"
-       image_id:  "{{image}}"
-       wait: "{{wait}}"
-       security_group: "{{ec2_security_group_name}}"
-       wait_timeout: 500
-       count: "{{count}}"
-       region: "{{region}}"
-       vpc_subnet_id:  "{{vpc_subnet_id}}"
-       network:
-         assign_public_ip: "{{ assign_public_ip | bool }}"
-       tags:
-         AlwaysUp: "{{alwaysup}}"
-         VPC: "{{vpc_name}}"
-         Name: "{{server_pre_name}}"
-         ansible_group: "{{ec2_ansible_group}}"
-         Createdby: Ansible Controller
-         Contact: "{{my_email_address}}"
-         DeletebBy: "{{deleteby}}"
-         Type: "{{group}}"
+        key_name: "{{key_name}}"
+        instance_type: "{{instance_type}}"
+        image_id: "{{image}}"
+        wait: "{{wait}}"
+        security_group: "{{ec2_security_group_name}}"
+        wait_timeout: 500
+        count: "{{count}}"
+        region: "{{region}}"
+        vpc_subnet_id: "{{vpc_subnet_id}}"
+        network:
+          assign_public_ip: "{{ assign_public_ip | bool }}"
+        tags:
+          AlwaysUp: "{{alwaysup}}"
+          VPC: "{{vpc_name}}"
+          Name: "{{server_pre_name}}"
+          ansible_group: "{{ec2_ansible_group}}"
+          Createdby: Ansible Controller
+          Contact: "{{my_email_address}}"
+          DeletebBy: "{{deleteby}}"
+          Type: "{{group}}"
